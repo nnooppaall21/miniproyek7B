@@ -102,3 +102,67 @@ def saring_data(data, driver_id=None, stop=None):
     if stop is not None:
         hasil = [d for d in hasil if d["stop"] == stop]
     return hasil
+
+def hitung_statistik(data):
+    """Rata-rata, minimum, maksimum, dan standar deviasi (sampel) durasi dalam ms."""
+    if not data:
+        return None
+    durasi = [d["ms"] for d in data]
+    return {
+        "n": len(durasi),
+        "rata_rata": statistics.mean(durasi),
+        "minimum": min(durasi),
+        "maksimum": max(durasi),
+        "std_dev": statistics.stdev(durasi) if len(durasi) >= 2 else 0.0,
+    }
+
+
+def klasifikasi(ms, efisien, normal):
+    """Menentukan kategori satu pit stop berdasarkan ambang."""
+    if ms <= efisien:
+        return "Sangat Efisien"
+    if ms <= normal:
+        return "Normal"
+    return "Perlu Evaluasi"
+
+
+def rekap_kategori(data, efisien, normal):
+    """Jumlah dan persentase tiap kategori."""
+    jumlah = {k: 0 for k in KATEGORI_URUT}
+    for d in data:
+        jumlah[klasifikasi(d["ms"], efisien, normal)] += 1
+    total = len(data)
+    persen = {k: (jumlah[k] / total * 100 if total else 0.0) for k in KATEGORI_URUT}
+    return jumlah, persen
+
+
+def buat_rekomendasi(stat, jumlah, persen):
+    """Saran evaluasi sederhana berdasarkan sebaran kategori dan variasi durasi."""
+    if stat is None:
+        return ["Tidak ada data untuk dievaluasi."]
+
+    saran = []
+    cv = stat["std_dev"] / stat["rata_rata"] * 100 if stat["rata_rata"] else 0
+
+    if persen["Perlu Evaluasi"] >= 50:
+        saran.append("Lebih dari separuh pit stop masuk kategori 'Perlu Evaluasi'. "
+                     "Tinjau prosedur kerja secara menyeluruh (urutan kerja, koordinasi kru, peralatan).")
+    elif persen["Perlu Evaluasi"] >= 25:
+        saran.append("Sebagian pit stop tergolong 'Perlu Evaluasi'. "
+                     "Bandingkan pit stop yang lambat dengan yang cepat untuk mencari penyebabnya.")
+    else:
+        saran.append("Sebagian besar pit stop berada pada kategori efisien/normal. "
+                     "Pertahankan prosedur yang berjalan.")
+
+    if persen["Sangat Efisien"] >= 50:
+        saran.append("Banyak pit stop 'Sangat Efisien'. Jadikan prosedur pada pit stop tersebut sebagai standar kerja.")
+
+    if cv > 10:
+        saran.append(f"Variasi durasi cukup besar (CV = {cv:.1f}%). "
+                     "Proses belum konsisten; standarisasi langkah kerja dan latihan berulang perlu ditingkatkan.")
+    else:
+        saran.append(f"Variasi durasi relatif kecil (CV = {cv:.1f}%). Proses tergolong konsisten.")
+
+    saran.append("Catatan: rekomendasi bersifat umum dan hanya bahan pertimbangan, bukan keputusan mutlak "
+                 "tentang kinerja tim.")
+    return saran
