@@ -166,3 +166,103 @@ def buat_rekomendasi(stat, jumlah, persen):
     saran.append("Catatan: rekomendasi bersifat umum dan hanya bahan pertimbangan, bukan keputusan mutlak "
                  "tentang kinerja tim.")
     return saran
+    def garis(n=78, ch="-"):
+    print(ch * n)
+
+
+def tampil_status(status, valid, tidak_valid):
+    garis(ch="=")
+    print("STATUS PEMBACAAN BERKAS")
+    garis(ch="=")
+    print(f"Status            : {status}")
+    print(f"Jumlah baris valid: {len(valid)}")
+    print(f"Baris tidak valid : {len(tidak_valid)}")
+    for no, alasan in tidak_valid:
+        print(f"   - baris {no}: {alasan}")
+
+
+def tampil_tabel(data, efisien, normal):
+    if not data:
+        print("Tidak ada data yang cocok dengan filter.")
+        return
+    garis()
+    print(f"{'No':>3} {'Kode':<5} {'Pembalap':<20} {'Stop':>4} {'Lap':>4} {'Durasi(ms)':>11}  Kategori")
+    garis()
+    for i, d in enumerate(data, start=1):
+        kat = klasifikasi(d["ms"], efisien, normal)
+        print(f"{i:>3} {d['driver_code']:<5} {d['driver_name']:<20} {d['stop']:>4} "
+              f"{d['lap']:>4} {d['ms']:>11,}  {kat}")
+    garis()
+    print(f"Total: {len(data)} pit stop")
+
+
+def tampil_statistik(stat):
+    if stat is None:
+        print("Tidak ada data untuk dihitung.")
+        return
+    garis()
+    print("RINGKASAN STATISTIK WAKTU PROSES")
+    garis()
+    print(f"Jumlah data        : {stat['n']}")
+    print(f"Rata-rata          : {stat['rata_rata']:,.1f} ms ({stat['rata_rata']/1000:.3f} detik)")
+    print(f"Minimum            : {stat['minimum']:,} ms ({stat['minimum']/1000:.3f} detik)")
+    print(f"Maksimum           : {stat['maksimum']:,} ms ({stat['maksimum']/1000:.3f} detik)")
+    print(f"Standar deviasi    : {stat['std_dev']:,.1f} ms ({stat['std_dev']/1000:.3f} detik)")
+
+
+def tampil_rekap(data, efisien, normal):
+    stat = hitung_statistik(data)
+    jumlah, persen = rekap_kategori(data, efisien, normal)
+    garis()
+    print("REKAPITULASI KATEGORI")
+    print(f"Ambang: Sangat Efisien <= {efisien:,.0f} ms | Normal <= {normal:,.0f} ms | "
+          f"Perlu Evaluasi > {normal:,.0f} ms")
+    garis()
+    print(f"{'Kategori':<18} {'Jumlah':>7} {'Persentase':>12}")
+    for k in KATEGORI_URUT:
+        print(f"{k:<18} {jumlah[k]:>7} {persen[k]:>11.1f}%")
+    print(f"{'Total':<18} {len(data):>7} {100.0 if data else 0.0:>11.1f}%")
+    garis()
+    print("REKOMENDASI EVALUASI")
+    garis()
+    for i, s in enumerate(buat_rekomendasi(stat, jumlah, persen), start=1):
+        print(f"{i}. {s}")
+
+
+def minta_angka(prompt, default=None):
+    """Meminta input bilangan bulat; mengembalikan None bila kosong/tidak valid."""
+    teks = input(prompt).strip()
+    if teks == "":
+        return default
+    try:
+        return int(teks)
+    except ValueError:
+        print("Input harus berupa angka bulat.")
+        return "ERR"
+
+
+def menu_filter(data, efisien, normal):
+    print("\nFilter data")
+    print("  1. Berdasarkan ID pembalap (driverId)")
+    print("  2. Berdasarkan nomor pemberhentian (stop)")
+    print("  3. Keduanya")
+    pilihan = input("Pilih [1-3]: ").strip()
+
+    driver_id = stop = None
+    if pilihan in ("1", "3"):
+        driver_id = minta_angka("Masukkan driverId (mis. 1 = Hamilton, 830 = Verstappen): ")
+        if driver_id == "ERR" or driver_id is None:
+            return None
+    if pilihan in ("2", "3"):
+        stop = minta_angka("Masukkan nomor stop (1-4): ")
+        if stop == "ERR" or stop is None:
+            return None
+    if pilihan not in ("1", "2", "3"):
+        print("Pilihan tidak valid.")
+        return None
+
+    hasil = saring_data(data, driver_id, stop)
+    if not hasil:
+        print("Tidak ada data yang cocok dengan filter tersebut.")
+        return None
+    return hasil
