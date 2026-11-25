@@ -166,7 +166,8 @@ def buat_rekomendasi(stat, jumlah, persen):
     saran.append("Catatan: rekomendasi bersifat umum dan hanya bahan pertimbangan, bukan keputusan mutlak "
                  "tentang kinerja tim.")
     return saran
-    def garis(n=78, ch="-"):
+
+def garis(n=78, ch="-"):
     print(ch * n)
 
 
@@ -266,3 +267,47 @@ def menu_filter(data, efisien, normal):
         print("Tidak ada data yang cocok dengan filter tersebut.")
         return None
     return hasil
+
+    def atur_ambang(efisien, normal):
+    print(f"\nAmbang saat ini: Sangat Efisien <= {efisien:,.0f} ms, Normal <= {normal:,.0f} ms")
+    e = input("Ambang 'Sangat Efisien' baru (ms) [Enter = tetap]: ").strip()
+    n = input("Ambang 'Normal' baru (ms)        [Enter = tetap]: ").strip()
+    e_baru = e if e else efisien
+    n_baru = n if n else normal
+    err = validasi_ambang(e_baru, n_baru)
+    if err:
+        print(f"Ambang tidak diubah. {err}")
+        return efisien, normal
+    print("Ambang berhasil diperbarui.")
+    return float(e_baru), float(n_baru)
+
+
+def tampil_menu():
+    print("\n" + "=" * 78)
+    print(" ANALISIS KONSISTENSI & KINERJA WAKTU PIT STOP - FORMULA 1")
+    print("=" * 78)
+    print(" 1. Muat ulang / ganti berkas CSV")
+    print(" 2. Tampilkan semua data pit stop")
+    print(" 3. Tampilkan data dengan filter (pembalap / stop)")
+    print(" 4. Statistik durasi (seluruh data)")
+    print(" 5. Rekapitulasi kategori & rekomendasi (seluruh data)")
+    print(" 6. Rekapitulasi kategori & rekomendasi (hasil filter)")
+    print(" 7. Atur nilai ambang klasifikasi")
+    print(" 0. Keluar")
+
+
+def muat_data(path):
+    status, valid, tidak_valid = baca_csv(path)
+    tampil_status(status, valid, tidak_valid)
+    return (status == "OK"), valid
+
+
+def main():
+    efisien, normal = float(AMBANG_EFISIEN_DEFAULT), float(AMBANG_NORMAL_DEFAULT)
+
+    folder = os.path.dirname(os.path.abspath(_file_))
+    path = os.path.join(folder, NAMA_FILE_DEFAULT)
+
+    ok, data = muat_data(path)
+    if not ok:
+        print("\nProgram tetap berjalan; pilih menu 1 untuk memuat berkas yang benar.")
