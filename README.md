@@ -1,4 +1,4 @@
-#Latar Belakang
+# Latar Belakang
 
   Dalam Teknik Industri, lamanya suatu pekerjaan diukur dengan Pengukuran Waktu Kerja (Time Study), yang dipelajari pada mata kuliah Studi Gerak dan Waktu. Metode ini cocok untuk pekerjaan yang berulang, singkat, dan berpola sama, lalu hasilnya dinilai dari seberapa stabil waktunya. Pit stop pada balap Formula 1 memenuhi ciri tersebut: dilakukan berulang kali, hanya memakan puluhan detik, langkah kerjanya sama setiap kali, dan selisih yang kecil saja dapat menggeser posisi pembalap.
 
@@ -13,7 +13,7 @@ Tahap	Kegiatan	Implementasi pada program
 
 Secara keseluruhan, struktur dan penanganan error-nya sudah rapi. Jika Anda mau, kirim sisa kodenya dan saya bisa bantu melengkapi validasi_baris atau bagian klasifikasi dan laporannya.
 
-#Tujuan Program
+# Tujuan Program
 
 Membaca berkas CSV pit stop dan memeriksa kelengkapan serta kewajaran isinya.
 Menghitung rata-rata, nilai terkecil, nilai terbesar, dan standar deviasi durasi pit stop.
@@ -23,7 +23,7 @@ Memberikan rekomendasi sederhana untuk mengevaluasi konsistensi proses pit stop.
 
 Pengguna yang dituju: mahasiswa Teknik Industri yang mempelajari analisis waktu kerja, pengamat atau analis data olahraga otomotif, dan asisten praktikum yang menilai pengolahan data pada program.
 
-#Dataset
+# Dataset
 
 Keterangan	Isi
 Berkas	pit_stops_race1054.csv
@@ -48,7 +48,7 @@ time	Waktu jam saat pemberhentian	-
 duration	Durasi dalam detik	-
 milliseconds	Durasi dalam milidetik (dipakai untuk semua perhitungan)	Ya
 
-#Fitur Program
+# Fitur Program
 
 Pembacaan berkas CSV: memuat data dari pit_stops_race1054.csv (default) atau berkas lain yang dipilih pengguna.
 Validasi data:
