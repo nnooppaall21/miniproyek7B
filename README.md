@@ -1,4 +1,4 @@
-Tujuan program
+#Latar Belakang
 
 Membaca berkas CSV berisi data pit stop, memeriksa kualitas datanya, lalu (kemungkinan di bagian berikutnya) mengelompokkan durasi pit stop ke dalam kategori efisiensi.
 
