@@ -53,6 +53,8 @@ def baca_csv(path):
         return "Berkas hanya berisi header, tidak ada data.", [], []
 
     return "OK", valid, tidak_valid
+
+
 def validasi_baris(baris):
     """Memeriksa satu baris. Mengembalikan (dict_bersih, None) atau (None, alasan)."""
     try:
@@ -102,6 +104,7 @@ def saring_data(data, driver_id=None, stop=None):
     if stop is not None:
         hasil = [d for d in hasil if d["stop"] == stop]
     return hasil
+
 
 def hitung_statistik(data):
     """Rata-rata, minimum, maksimum, dan standar deviasi (sampel) durasi dalam ms."""
@@ -166,6 +169,7 @@ def buat_rekomendasi(stat, jumlah, persen):
     saran.append("Catatan: rekomendasi bersifat umum dan hanya bahan pertimbangan, bukan keputusan mutlak "
                  "tentang kinerja tim.")
     return saran
+
 
 def garis(n=78, ch="-"):
     print(ch * n)
@@ -268,7 +272,8 @@ def menu_filter(data, efisien, normal):
         return None
     return hasil
 
-    def atur_ambang(efisien, normal):
+
+def atur_ambang(efisien, normal):
     print(f"\nAmbang saat ini: Sangat Efisien <= {efisien:,.0f} ms, Normal <= {normal:,.0f} ms")
     e = input("Ambang 'Sangat Efisien' baru (ms) [Enter = tetap]: ").strip()
     n = input("Ambang 'Normal' baru (ms)        [Enter = tetap]: ").strip()
@@ -305,9 +310,55 @@ def muat_data(path):
 def main():
     efisien, normal = float(AMBANG_EFISIEN_DEFAULT), float(AMBANG_NORMAL_DEFAULT)
 
-    folder = os.path.dirname(os.path.abspath(_file_))
+    folder = os.path.dirname(os.path.abspath(__file__))
     path = os.path.join(folder, NAMA_FILE_DEFAULT)
 
     ok, data = muat_data(path)
     if not ok:
         print("\nProgram tetap berjalan; pilih menu 1 untuk memuat berkas yang benar.")
+
+    while True:
+        tampil_menu()
+        pilihan = input("Pilih menu [0-7]: ").strip()
+
+        if pilihan == "0":
+            print("Terima kasih. Program selesai.")
+            break
+
+        elif pilihan == "1":
+            masukan = input(f"Nama/path berkas CSV [Enter = {NAMA_FILE_DEFAULT}]: ").strip()
+            path = masukan if masukan else os.path.join(folder, NAMA_FILE_DEFAULT)
+            ok, data = muat_data(path)
+
+        elif pilihan in ("2", "3", "4", "5", "6"):
+            if not ok or not data:
+                print("Belum ada data valid. Muat berkas terlebih dahulu (menu 1).")
+                continue
+
+            if pilihan == "2":
+                tampil_tabel(data, efisien, normal)
+            elif pilihan == "3":
+                hasil = menu_filter(data, efisien, normal)
+                if hasil:
+                    tampil_tabel(hasil, efisien, normal)
+                    tampil_statistik(hitung_statistik(hasil))
+            elif pilihan == "4":
+                tampil_statistik(hitung_statistik(data))
+            elif pilihan == "5":
+                tampil_statistik(hitung_statistik(data))
+                tampil_rekap(data, efisien, normal)
+            elif pilihan == "6":
+                hasil = menu_filter(data, efisien, normal)
+                if hasil:
+                    tampil_statistik(hitung_statistik(hasil))
+                    tampil_rekap(hasil, efisien, normal)
+
+        elif pilihan == "7":
+            efisien, normal = atur_ambang(efisien, normal)
+
+        else:
+            print("Pilihan tidak valid, coba lagi.")
+
+
+if __name__ == "__main__":
+    main()
