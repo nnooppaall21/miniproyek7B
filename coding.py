@@ -45,34 +45,45 @@ DATA_CONTOH = [
 
 
 def cover():
-    print("=" * 78)
-    print("MINI PROJECT".center(78))
-    print("PEMROGRAMAN KOMPUTER".center(78))
-    print("")
-    print("(Analisis Konsistensi dan Kinerja Waktu Pit Stop".center(78))
-    print("pada Balapan Formula 1)".center(78))
-    print("")
-    print("Oleh :".center(78))
-    print("Kelompok 7B".center(78))
-    print("")
-    print("Anggota Kelompok :".center(78))
-    print("Stefan Virgo Zalukhu (2610932037)".center(78))
-    print("Muhammad Rifat Naufal (2610933007)".center(78))
-    print("Rafa Amalia Yurinov (2610932005)".center(78))
-    print("M. Dafa Al Saban (2610932001)".center(78))
-    print("")
-    print("Asisten Pembimbing :".center(78))
-    print("Faiza Mumtaz & Intan Permata Mustika".center(78))
-    print("")
-    print("Dosen Pengampu :".center(78))
-    print("Dr. Eng. Ardhian Agung Yulianto".center(78))
-    print("")
-    print("LABORATORIUM SISTEM INFORMASI DAN KEPUTUSAN".center(78))
-    print("DEPARTEMEN TEKNIK INDUSTRI".center(78))
-    print("FAKULTAS TEKNIK".center(78))
-    print("UNIVERSITAS ANDALAS".center(78))
-    print("2026".center(78))
-    print("=" * 78)
+    def baris(teks=""):
+        print("|" + teks.center(85) + "|")
+
+    print("+" + "-" * 85 + "+")
+    baris()
+    baris()
+    baris("MINI PROJECT")
+    baris("PROGRAMA KOMPUTER")
+    baris()
+    baris("(Analisis Konsistensi dan Kinerja Waktu Pit Stop")
+    baris("pada Balapan Formula 1)")
+    baris()
+    baris()
+    baris("Oleh :")
+    baris("Kelompok 7B")
+    baris()
+    baris("Anggota Kelompok :")
+    baris("Stefan Virgo Zalukhu (2610932037)")
+    baris("Muhammad Rifat Naufal (2610933007)")
+    baris("Rafa Amalia Yurinov (2610932005)")
+    baris("M. Dafa Al Saban (2610932001)")
+    baris()
+    baris()
+    baris("Asisten Pembimbing :")
+    baris("Faiza Mumtaz & Intan Permata Mustika")
+    baris()
+    baris()
+    baris("Dosen Pengampu :")
+    baris("Dr. Eng. Ardhian Agung Yulianto")
+    baris()
+    baris()
+    baris("LABORATORIUM SISTEM INFORMASI DAN KEPUTUSAN")
+    baris("DEPARTEMEN TEKNIK INDUSTRI")
+    baris("FAKULTAS TEKNIK")
+    baris("UNIVERSITAS ANDALAS")
+    baris("2026")
+    baris()
+    baris()
+    print("+" + "-" * 85 + "+")
 
     input("\nTekan Enter untuk melanjutkan...")
 
@@ -215,9 +226,11 @@ def tampil_tabel(data):
 
     print("-" * 86)
     print(
-        f"{'No':>3} {'Kode':<5} {'Pembalap':<20} "
-        f"{'Stop':>4} {'Lap':>4} {'Durasi(ms)':>12} {'Detik':>9}"
-    )
+        f"{'No':>3} {'Driver ID':>10} {'Kode':<5} "
+        f"{'Pembalap':<20} {'Stop':>4} {'Lap':>4} "
+        f"{'Durasi(ms)':>12} {'Detik':>9}"
+    )   
+    
     print("-" * 86)
 
     for i, d in enumerate(data, start=1):
@@ -225,7 +238,8 @@ def tampil_tabel(data):
         detik = d["ms"] / 1000
 
         print(
-            f"{i:>3} {d['driver_code']:<5} "
+            f"{i:>3} {d['driverId']:>10} "
+            f"{d['driver_code']:<5} "
             f"{d['driver_name']:<20} "
             f"{d['stop']:>4} {d['lap']:>4} "
             f"{d['ms']:>12,} {detik:>9.3f}"
@@ -248,13 +262,13 @@ def tampil_statistika(data):
     print("=" * 65)
 
     print("Jumlah pengamatan :", hasil["jumlah"])
-    print("Rata-rata (Mean)  :", round(hasil["rata"], 3), "detik")
-    print("Median            :", round(hasil["median"], 3), "detik")
-    print("Nilai minimum     :", round(hasil["min"], 3), "detik")
-    print("Nilai maksimum    :", round(hasil["max"], 3), "detik")
-    print("Rentang (Range)   :", round(hasil["rentang"], 3), "detik")
-    print("Varians           :", round(hasil["varians"], 3))
-    print("Standar deviasi   :", round(hasil["sd"], 3), "detik")
+    print("Rata-rata (Mean) :", round(hasil["rata"], 3), "detik")
+    print("Median :", round(hasil["median"], 3), "detik")
+    print("Nilai minimum :", round(hasil["min"], 3), "detik")
+    print("Nilai maksimum :", round(hasil["max"], 3), "detik")
+    print("Rentang (Range) :", round(hasil["rentang"], 3), "detik")
+    print("Varians :", round(hasil["varians"], 3))
+    print("Standar deviasi :", round(hasil["sd"], 3), "detik")
     print("Koefisien variasi :", round(hasil["kv"], 2), "%")
 
     print("=" * 65)
