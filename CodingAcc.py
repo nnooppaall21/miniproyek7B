@@ -1,7 +1,7 @@
 import csv
 import os
 
-NAMA_FILE_DEFAULT = "pit_stops_race1054.csv"
+file_csv = r"C:\semester 1\miniproyek7B\pit_stops_race1054.csv"
 NAMA_FILE_PENGGUNA = "pengguna.csv"
 MAKS_PERCOBAAN_LOGIN = 3
 
@@ -373,6 +373,166 @@ def analisis_pembalap(data):
             f"{data_pembalap[0]['driver_code']:<7} "
             f"{data_pembalap[0]['driver_name']:<22} "
             f"{hasil['jumlah']:>7} "
+            f"{hasil['rata']:>10.3f} "
+            f"{hasil['median']:>10.3f} "
+            f"{hasil['sd']:>10.3f}"
+        )
+
+    print("-" * 78)
+
+
+def menu_filter(data, banyak=False):   
+
+    print("\nFILTER DATA")
+    print("1. Berdasarkan ID pembalap")
+    print("2. Berdasarkan nomor pit stop")
+
+    pilihan = input("Pilih [1-2]: ").strip()
+
+    if pilihan not in ("1", "2"):
+        print("Pilihan tidak valid.")
+        return None
+
+    hasil = data
+
+    if pilihan in ("1"):
+
+        if banyak:
+            teks = input("Masukkan driverId (pisahkan dengan koma, minimal 2): ")
+        else:
+            teks = input("Masukkan driverId: ")
+
+        try:
+            daftar = [int(x) for x in teks.split(",")]
+
+        except ValueError:
+            print("ID harus berupa angka.")
+            return None
+
+        if not banyak:
+            daftar = daftar[:1]
+
+        hasil = [d for d in hasil if d["driverId"] in daftar]
+
+        if banyak:
+            ada = []
+
+            for d in hasil:
+                if d["driverId"] not in ada:
+                    ada.append(d["driverId"])
+
+            if len(set(daftar)) < 2 or len(ada) < 2:
+                print("Perbandingan membutuhkan minimal 2 driverId berbeda yang ada di data.")
+                return None
+
+    if pilihan in ("2"):
+
+        try:
+            nilai = int(input("Masukkan nomor stop: "))
+
+        except ValueError:
+            print("Nomor stop harus berupa angka.")
+            return None
+
+        hasil = [d for d in hasil if d["stop"] == nilai]
+
+    if not hasil:
+        print("Data tidak ditemukan.")
+        return None
+
+    return hasil
+
+
+def pilih_data(data, banyak=False):
+
+    print("\nPILIH DATA")
+    print("1. Semua data")
+    print("2. Data filter")
+
+    pilihan = input("Pilih [1-2]: ").strip()
+
+    if pilihan == "1":
+        return data
+
+    elif pilihan == "2":
+        return menu_filter(data, banyak)
+
+    print("Pilihan tidak valid.")
+    return None
+
+
+def muat_data(path):
+
+    status, valid, tidak_valid = baca_csv(path)
+
+    print("\n" + "=" * 65)
+    print("STATUS PEMBACAAN BERKAS")
+    print("=" * 65)
+
+    print("Status :", status)
+    print("Jumlah data valid :", len(valid))
+    print("Jumlah data tidak valid :", len(tidak_valid))
+
+    for no, alasan in tidak_valid:
+        print("Baris", no, ":", alasan)
+
+    return status == "OK", valid
+
+
+def main():
+
+    cover()
+
+    if not menu_login():
+        print("Program ditutup.")
+        return
+
+    ok, data = muat_data(file_csv)
+
+    if not ok:
+        print("Program tidak dapat dilanjutkan tanpa data valid.")
+        return
+
+    while True:
+
+        print("\n" + "=" * 65)
+        print(" ANALISIS WAKTU PIT STOP FORMULA 1 ")
+        print(" METODE STATISTIKA")
+        print("=" * 65)
+
+        print("1. Tampilkan data pit stop")
+        print("2. Analisis statistika")
+        print("3. Perbandingan statistika antar pembalap")
+        print("4. Keluar")
+
+        pilihan = input("Pilih menu [1-4]: ").strip()
+
+        if pilihan == "4":
+
+            print("Terima kasih. Program selesai.")
+            break
+
+        elif pilihan in ("1", "2", "3"):
+
+            hasil = pilih_data(data, pilihan == "3")
+
+            if hasil:
+
+                if pilihan == "1":
+                    tampil_tabel(hasil)
+
+                elif pilihan == "2":
+                    tampil_statistika(hasil)
+
+                elif pilihan == "3":
+                    analisis_pembalap(hasil)
+
+        else:
+            print("Pilihan tidak valid, coba lagi.")
+
+
+if __name__ == "__main__":
+    main():>7} "
             f"{hasil['rata']:>10.3f} "
             f"{hasil['median']:>10.3f} "
             f"{hasil['sd']:>10.3f}"
