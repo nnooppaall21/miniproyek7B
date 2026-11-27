@@ -1,77 +1,34 @@
 # Latar Belakang
 
-  Dalam Teknik Industri, lamanya suatu pekerjaan diukur dengan Pengukuran Waktu Kerja (Time Study), yang dipelajari pada mata kuliah Studi Gerak dan Waktu. Metode ini cocok untuk pekerjaan yang berulang, singkat, dan berpola sama, lalu hasilnya dinilai dari seberapa stabil waktunya. Pit stop pada balap Formula 1 memenuhi ciri tersebut: dilakukan berulang kali, hanya memakan puluhan detik, langkah kerjanya sama setiap kali, dan selisih yang kecil saja dapat menggeser posisi pembalap.
+  Program Python ini membaca data pit stop dari berkas CSV, memeriksa struktur dan isi data, menampilkan catatan pit stop, melakukan penyaringan, menghitung statistik deskriptif, serta membandingkan statistik antar pembalap.
+# Tujuan penggunaan
+membantu pengguna menelusuri data pit stop Grand Prix Portugal 2021 (raceId 1054) dan memperoleh ringkasan numerik dari durasi pit stop. Program bersifat deskriptif; hasilnya hanya menggambarkan data yang dimasukkan dan bukan prediksi atau generalisasi untuk balapan lain.
+# Kebutuhan 
+Python 3. Pustaka csv dan statistics sudah termasuk dalam pustaka standar Python sehingga tidak perlu instalasi tambahan.
+# Berkas yang diperlukan
+file program Python dan pit_stops_race1054.csv. Jika CSV tidak ditemukan pada lokasi kerja, program mencoba membuat berkas contoh berisi 24 baris demonstrasi. Data contoh bukan pengganti dataset asli 60 baris.
+# Kolom wajib CSV
+driverId, driver_code, driver_name, stop, lap, dan milliseconds. Kolom milliseconds berisi durasi dalam milidetik. Program mengubahnya menjadi detik dengan membagi nilai milidetik dengan 1000.
 
-Pada teori aslinya, Time Study berlanjut sampai penghitungan waktu normal dan waktu baku dengan tambahan kelonggaran. Pada proyek ini, metodenya disederhanakan menjadi lima tahap:
+# Menu program
+## 1 = memuat ulang atau mengganti file CSV
+## 2 = menampilkan seluruh data pit stop
+## 3 = menampilkan data berdasarkan filter 
+## 4 = menganalisis statistik seluruh data 
+## 5 = menganalisis statistik dari hasil filter
+## 6 = membandingkan statistik antar pembalap
+## 0 = keluar dari program.
+# Pilihan filter
 
-Tahap	Kegiatan	Implementasi pada program
-## 1. 	Menentukan pekerjaan yang diukur	Pit stop pada satu balapan
-## 2. 	Mencatat waktu	Data durasi sudah tersedia pada berkas CSV
-## 3. 	Menghitung statistik waktu	Rata-rata, minimum, maksimum, standar deviasi
-## 4. 	Membandingkan dengan standar	Klasifikasi berdasarkan nilai ambang batas
-## 5. 	Mengevaluasi hasil	Rekapitulasi kategori dan rekomendasi konsistensi proses
 
-Secara keseluruhan, struktur dan penanganan error-nya sudah rapi. Jika Anda mau, kirim sisa kodenya dan saya bisa bantu melengkapi validasi_baris atau bagian klasifikasi dan laporannya.
-
-# Tujuan Program
-
-### 1. Membaca berkas CSV pit stop dan memeriksa kelengkapan serta kewajaran isinya.
-### 2. Menghitung rata-rata, nilai terkecil, nilai terbesar, dan standar deviasi durasi pit stop.
-### 3. Menggolongkan setiap pit stop ke dalam kategori Sangat Efisien, Normal, atau Perlu Evaluasi berdasarkan nilai ambang.
-### 4. Menampilkan rekapitulasi jumlah dan persentase tiap kategori, baik untuk seluruh data maupun untuk pembalap atau nomor pemberhentian tertentu.
-### 5. Memberikan rekomendasi sederhana untuk mengevaluasi konsistensi proses pit stop.
-
-Pengguna yang dituju: mahasiswa Teknik Industri yang mempelajari analisis waktu kerja, pengamat atau analis data olahraga otomotif, dan asisten praktikum yang menilai pengolahan data pada program.
-
-# Dataset
-
-## Keterangan Isi
-### Berkas pit_stops_race1054.csv
-### Sumber	Dataset Formula 1 World Championship di Kaggle, disaring untuk satu balapan
-### Balapan	Portuguese Grand Prix 2021 (raceId = 1054)
-### Jumlah data	60 pit stop dari 19 pembalap
-### Rentang durasi	21.275 ms sampai 28.639 ms (sekitar 21 sampai 29 detik)
-### Jumlah pemberhentian	Stop 1: 19, Stop 2: 19, Stop 3: 19, Stop 4: 3
-
-Kolom pada berkas:
-
-Kolom	  Keterangan	Wajib oleh program
-raceId	ID balapan	-
-year	Tahun balapan	-
-race_name	Nama balapan	-
-driverId	ID pembalap (mis. 1 = Hamilton, 830 = Verstappen, 822 = Bottas)	Ya
-driver_code	Kode tiga huruf pembalap (mis. HAM)	Ya
-driver_name	Nama pembalap	Ya
-stop	Nomor pemberhentian pembalap pada balapan tersebut	Ya
-lap	Putaran saat pembalap masuk pit	Ya
-time	Waktu jam saat pemberhentian	-
-duration	Durasi dalam detik	-
-milliseconds	Durasi dalam milidetik (dipakai untuk semua perhitungan)	Ya
-
-# Fitur Program
-
-#### 1. Pembacaan berkas CSV: memuat data dari pit_stops_race1054.csv (default) atau berkas lain yang dipilih pengguna.
-#### 2. Validasi data:
-####   - berkas tidak ditemukan, berkas kosong, atau hanya berisi header;
-####   - kolom wajib tidak ada;
-####   - driverId, stop, lap, atau milliseconds bukan angka;
-####   - durasi di luar batas wajar 15.000 sampai 60.000 ms.
- Baris valid dan tidak valid dipisahkan, dan alasan setiap baris yang ditolak ditampilkan beserta nomor barisnya.
-
-#### 3. Penyaringan data: berdasarkan driverId, nomor stop, atau keduanya.
-#### 4. Perhitungan statistik: jumlah data, rata-rata, minimum, maksimum, dan standar deviasi.
-#### 5. Klasifikasi efisiensi: setiap pit stop digolongkan ke tiga kategori berdasarkan nilai ambang.
-#### 6. Rekapitulasi dan rekomendasi: jumlah dan persentase tiap kategori beserta saran evaluasi otomatis.
-#### 7. Pengaturan ambang: nilai ambang dapat diubah lewat menu, dengan validasi (harus angka positif dan ambang "Sangat Efisien" lebih kecil dari ambang "Normal").
-#### 8. Tahan kesalahan: program tetap berjalan bila berkas gagal dimuat, sehingga pengguna dapat memuat ulang lewat menu 1.
-
-## Menu program:
-Menu Fungsi
-### 1, Muat ulang / ganti berkas CSV
-### 2, Tampilkan semua data pit stop
-### 3, Tampilkan data dengan filter (pembalap / stop)
-### 4, Statistik durasi (seluruh data)
-### 5, Rekapitulasi kategori dan rekomendasi (seluruh data)
-### 6, Rekapitulasi kategori dan rekomendasi (hasil filter)
-### 7, Atur nilai ambang klasifikasi
-### 0, Keluar
+pengguna dapat menyaring berdasarkan driverId, nomor pit stop (stop), atau gabungan keduanya. Nilai ID dan nomor pit stop harus berupa angka. Jika format masukan salah atau tidak ada data yang cocok, program menampilkan pesan dan tidak melanjutkan analisis filter tersebut.
+# Validasi data
+program memeriksa keberadaan header, kelengkapan enam kolom wajib, serta kemampuan mengonversi driverId, stop, lap, dan milliseconds menjadi angka. Program juga menerapkan rentang pemeriksaan durasi 15.000–60.000 milidetik melalui konstanta BATAS_WAJAR_MIN dan BATAS_WAJAR_MAX. Rentang ini adalah aturan teknis yang tertanam pada kode; jangan menyebutnya sebagai standar universal Formula 1 tanpa sumber akademik atau regulasi yang secara langsung mendukungnya.
+# Hasil perhitungan
+program menampilkan jumlah pengamatan, mean, median, nilai minimum, maksimum, rentang, varians, standar deviasi, dan koefisien variasi. Durasi ditampilkan dalam detik. Pada kode saat ini, varians dan standar deviasi dihitung sebagai statistik sampel menggunakan statistics.variance() dan statistics.stdev() jika jumlah pengamatan minimal dua; jika hanya satu pengamatan, keduanya diatur menjadi nol.
+# Interpretasi keluaran
+mean dan median menggambarkan pemusatan data; minimum, maksimum, dan rentang menunjukkan batas serta selisih durasi; standar deviasi dan koefisien variasi menggambarkan penyebaran relatif terhadap rata-rata. Keluaran statistik tidak dengan sendirinya membuktikan penyebab cepat atau lambatnya pit stop.
+# Catatan akademik
+kode saat ini memberi label variasi relatif rendah jika koefisien variasi <10%, sedang jika <20%, dan tinggi jika ≥20%. Ambang tersebut merupakan aturan klasifikasi dalam implementasi program. Gunakan label itu sebagai kategori ilmiah hanya jika kelompok dapat mencantumkan rujukan yang secara eksplisit mendukung batas tersebut. Jika jurnal yang digunakan tidak menetapkan ambang itu, laporkan nilai koefisien variasinya secara numerik tanpa menyimpulkan kategori baku.
+# Batasan
+program tidak melakukan uji hipotesis, pemodelan prediktif, atau penilaian sebab-akibat. Ketepatan hasil bergantung pada kelengkapan, konsistensi, dan kebenaran data CSV yang digunakan. Dataset yang dijelaskan dalam laporan merupakan 60 catatan pit stop dari 19 pembalap pada Grand Prix Portugal 2021.
